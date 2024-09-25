@@ -1,3 +1,6 @@
+import { link } from "fs";
+import { url } from "inspector";
+
 export const navItems = [
   { name: "About", link: "#about" },
   { name: "Projects", link: "#projects" },
@@ -205,13 +208,11 @@ export const socialMedia = [
   {
     id: 1,
     img: "/git.svg",
-  },
-  {
-    id: 2,
-    img: "/twit.svg",
+    url: "https://github.com/Abdurrehman0024"
   },
   {
     id: 3,
     img: "/link.svg",
+    url: "https://www.linkedin.com/in/abdur-rehman-6a0a312a9/"
   },
 ];

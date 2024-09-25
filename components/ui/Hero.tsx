@@ -22,15 +22,15 @@ const Hero = () => {
 
           <TextGenerateEffect
            className="text-center text-[40px] md:text-2xl lg:text-6xl"
-           words="Hi, My name is Abdur Rehman"
+           words="Driven by curiosity, shaped by creativity"
           />
 
           <p className="text-center md:tracking-wider mb-4 text-xs md:text-xs lg:text-sm">
-            A dedicated software engineer
+            Hi,I&apos;m  Abdur Rehman, a passioante Next.js  developer
           
           </p>
 
-              <a href = "">
+              <a href = "#projects">
                 <MagicButton
                  title="My Work"
                  icon = {<FaLocationArrow />}
