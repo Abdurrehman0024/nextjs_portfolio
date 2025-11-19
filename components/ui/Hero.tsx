@@ -5,7 +5,7 @@ import { TextGenerateEffect } from "./TextGenerateEffect";
 
 const Hero = () => {
   return (
-    <div className="pb-20 pt-36">
+    <div className="pb-5 pt-20">
       <div>
         <Spotlight className="-top-40 -left-10 md:-left-32 md:-top-20 h-screen w-full" fill="white" />
         <Spotlight className="top-10 left-full h-[80vh] w-[50vw]" fill="purple" />
@@ -26,7 +26,7 @@ const Hero = () => {
           />
 
           <p className="text-center md:tracking-wider mb-4 text-xs md:text-xs lg:text-sm">
-            Hi,I&apos;m  Abdur Rehman, a passioante Next.js  developer
+            Hi,I&apos;m  Abdur Rehman, a passioante Web developer
           
           </p>
 
