@@ -1,11 +1,14 @@
-import Hero from "@/components/ui/Hero";
+import dynamic from 'next/dynamic';
 import { FaHome } from 'react-icons/fa';
-import { FloatingNav } from "@/components/ui/FloatingNav";
-import Grid from "@/components/ui/Grid";
-import RecentProjects from "@/components/RecentProjects";
 import { navItems } from "@/data";
-import Client from "@/components/ui/Client";
-import Footer from "@/components/ui/Footer";
+
+// Dynamically import components that might use browser APIs
+const Hero = dynamic(() => import("@/components/ui/Hero"), { ssr: true });
+const FloatingNav = dynamic(() => import("@/components/ui/FloatingNav").then(mod => ({ default: mod.FloatingNav })), { ssr: true });
+const Grid = dynamic(() => import("@/components/ui/Grid"), { ssr: false });
+const RecentProjects = dynamic(() => import("@/components/RecentProjects"), { ssr: true });
+const Client = dynamic(() => import("@/components/ui/Client"), { ssr: true });
+const Footer = dynamic(() => import("@/components/ui/Footer"), { ssr: true });
 
 export default function Home() {
   return (

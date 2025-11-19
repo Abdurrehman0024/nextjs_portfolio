@@ -118,18 +118,31 @@ export function Globe({ globeConfig, data }: WorldProps) {
     let points = [];
     for (let i = 0; i < arcs.length; i++) {
       const arc = arcs[i];
-      const rgb = hexToRgb(arc.color) as { r: number; g: number; b: number };
+      const rgb = hexToRgb(arc.color);
+      
+      // Validate RGB values and lat/lng
+      if (!rgb || 
+          isNaN(arc.startLat) || isNaN(arc.startLng) || 
+          isNaN(arc.endLat) || isNaN(arc.endLng) ||
+          !isFinite(arc.startLat) || !isFinite(arc.startLng) ||
+          !isFinite(arc.endLat) || !isFinite(arc.endLng)) {
+        continue; // Skip invalid data
+      }
+      
+      const defaultRgb = { r: 100, g: 100, b: 255 }; // Default color if hexToRgb fails
+      const validRgb = rgb || defaultRgb;
+      
       points.push({
         size: defaultProps.pointSize,
         order: arc.order,
-        color: (t: number) => `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${1 - t})`,
+        color: (t: number) => `rgba(${validRgb.r}, ${validRgb.g}, ${validRgb.b}, ${1 - t})`,
         lat: arc.startLat,
         lng: arc.startLng,
       });
       points.push({
         size: defaultProps.pointSize,
         order: arc.order,
-        color: (t: number) => `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${1 - t})`,
+        color: (t: number) => `rgba(${validRgb.r}, ${validRgb.g}, ${validRgb.b}, ${1 - t})`,
         lat: arc.endLat,
         lng: arc.endLng,
       });
@@ -167,26 +180,52 @@ export function Globe({ globeConfig, data }: WorldProps) {
   const startAnimation = () => {
     if (!globeRef.current || !globeData) return;
 
+    // Filter out invalid data before passing to globe
+    const validData = data.filter((arc) => 
+      !isNaN(arc.startLat) && !isNaN(arc.startLng) && 
+      !isNaN(arc.endLat) && !isNaN(arc.endLng) &&
+      isFinite(arc.startLat) && isFinite(arc.startLng) &&
+      isFinite(arc.endLat) && isFinite(arc.endLng)
+    );
+
+    if (validData.length === 0) return;
+
     globeRef.current
-      .arcsData(data)
-      .arcStartLat((d) => (d as { startLat: number }).startLat * 1)
-      .arcStartLng((d) => (d as { startLng: number }).startLng * 1)
-      .arcEndLat((d) => (d as { endLat: number }).endLat * 1)
-      .arcEndLng((d) => (d as { endLng: number }).endLng * 1)
+      .arcsData(validData)
+      .arcStartLat((d) => {
+        const lat = (d as { startLat: number }).startLat;
+        return isNaN(lat) || !isFinite(lat) ? 0 : lat;
+      })
+      .arcStartLng((d) => {
+        const lng = (d as { startLng: number }).startLng;
+        return isNaN(lng) || !isFinite(lng) ? 0 : lng;
+      })
+      .arcEndLat((d) => {
+        const lat = (d as { endLat: number }).endLat;
+        return isNaN(lat) || !isFinite(lat) ? 0 : lat;
+      })
+      .arcEndLng((d) => {
+        const lng = (d as { endLng: number }).endLng;
+        return isNaN(lng) || !isFinite(lng) ? 0 : lng;
+      })
       .arcColor((e: any) => (e as { color: string }).color)
       .arcAltitude((e) => {
-        return (e as { arcAlt: number }).arcAlt * 1;
+        const alt = (e as { arcAlt: number }).arcAlt;
+        return isNaN(alt) || !isFinite(alt) ? 0 : alt;
       })
       .arcStroke((e) => {
         return [0.32, 0.28, 0.3][Math.round(Math.random() * 2)];
       })
       .arcDashLength(defaultProps.arcLength)
-      .arcDashInitialGap((e) => (e as { order: number }).order * 1)
+      .arcDashInitialGap((e) => {
+        const order = (e as { order: number }).order;
+        return isNaN(order) || !isFinite(order) ? 0 : order;
+      })
       .arcDashGap(15)
       .arcDashAnimateTime((e) => defaultProps.arcTime);
 
     globeRef.current
-      .pointsData(data)
+      .pointsData(validData)
       .pointColor((e) => (e as { color: string }).color)
       .pointsMerge(true)
       .pointAltitude(0.0)
@@ -234,7 +273,9 @@ export function WebGLRendererConfig() {
   const { gl, size } = useThree();
 
   useEffect(() => {
-    gl.setPixelRatio(window.devicePixelRatio);
+    if (typeof window !== 'undefined') {
+      gl.setPixelRatio(window.devicePixelRatio);
+    }
     gl.setSize(size.width, size.height);
     gl.setClearColor(0xffaaff, 0);
   }, []);

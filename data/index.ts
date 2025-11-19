@@ -111,16 +111,19 @@ export const testimonials = [
     quote:
       "Abdur's expertise in managing my applications using a component-based approach was remarkable. His structured methodology ensured scalability and maintainability, making the entire process seamless.",
     name: "Sophia",
+    title: "",
   },
   {
     quote:
       "It was great working with Abdur. He is not only a smart developer but also a proactive problem solver who always delivers on time.",
     name: "Carlos",
+    title: "",
   },
   {
     quote:
       "Abdur's positive attitude and smart approach to tackling challenges made him a joy to work with. His enthusiasm is contagious, and his results speak for themselves.",
     name: "Darvey stanley",
+    title: "",
   },
 ];
 
